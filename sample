@@ -1,0 +1,47 @@
+<div id="rsuite-modal" class="rsuite-modal ui-draggable" style="width: 50%; top: 117px; left: 265px;">
+   <div class="panel-title">
+      <h2>Where Used (ID: 7887126)</h2>
+   </div>
+   <div class="body">
+      <div class="whereused">
+         <div class="instruction">meta is reused 1 time</div>
+         <div class="tree">
+            <ul>
+               <li uri="/Indicenter/" nid="Indicenter" name="Indicenter" ntype="folder" class="last">
+                  <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Indicenter</span></div>
+                  <ul>
+                     <li uri="/Indicenter/PAS2500/" nid="PAS2500" name="PAS2500" ntype="folder" class="last">
+                        <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">PAS2500</span></div>
+                        <ul>
+                           <li uri="/Indicenter/PAS2500/Illustrations/" nid="Illustrations" name="Illustrations" ntype="folder" class="last">
+                              <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Illustrations</span></div>
+                              <ul>
+                                 <li uri="/Indicenter/PAS2500/Illustrations/Alignment/" nid="Alignment" name="Alignment" ntype="folder" class="last">
+                                    <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Alignment</span></div>
+                                    <ul>
+                                       <li uri="/Indicenter/PAS2500/Illustrations/Alignment/ca:7887125/" nid="7887125" name="7887125" ntype="ca" class="last">
+                                          <div class="node ca"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">7887125 (ID: 7887125)</span></div>
+                                          <ul>
+                                             <li uri="/Indicenter/PAS2500/Illustrations/Alignment/ca:7887125/moref:7887127/" nid="7887127" name="meta" ntype="moref" class="last">
+                                                <div class="node moref"><span class="leaf">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">meta (ID: 7887126)</span></div>
+                                             </li>
+                                          </ul>
+                                       </li>
+                                    </ul>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                  </ul>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <div class="buttons"><button>Close</button></div>
+   </div>
+</div>
+
+
+
+
