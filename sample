@@ -1,47 +1,73 @@
-<div id="rsuite-modal" class="rsuite-modal ui-draggable" style="width: 50%; top: 117px; left: 265px;">
-   <div class="panel-title">
-      <h2>Where Used (ID: 7887126)</h2>
-   </div>
-   <div class="body">
-      <div class="whereused">
-         <div class="instruction">meta is reused 1 time</div>
-         <div class="tree">
-            <ul>
-               <li uri="/Indicenter/" nid="Indicenter" name="Indicenter" ntype="folder" class="last">
-                  <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Indicenter</span></div>
-                  <ul>
-                     <li uri="/Indicenter/PAS2500/" nid="PAS2500" name="PAS2500" ntype="folder" class="last">
-                        <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">PAS2500</span></div>
-                        <ul>
-                           <li uri="/Indicenter/PAS2500/Illustrations/" nid="Illustrations" name="Illustrations" ntype="folder" class="last">
-                              <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Illustrations</span></div>
-                              <ul>
-                                 <li uri="/Indicenter/PAS2500/Illustrations/Alignment/" nid="Alignment" name="Alignment" ntype="folder" class="last">
-                                    <div class="node folder"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">Alignment</span></div>
-                                    <ul>
-                                       <li uri="/Indicenter/PAS2500/Illustrations/Alignment/ca:7887125/" nid="7887125" name="7887125" ntype="ca" class="last">
-                                          <div class="node ca"><span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">7887125 (ID: 7887125)</span></div>
-                                          <ul>
-                                             <li uri="/Indicenter/PAS2500/Illustrations/Alignment/ca:7887125/moref:7887127/" nid="7887127" name="meta" ntype="moref" class="last">
-                                                <div class="node moref"><span class="leaf">&nbsp;</span><span class="icon"><span class="icon-status"></span></span><span class="label">meta (ID: 7887126)</span></div>
-                                             </li>
-                                          </ul>
-                                       </li>
-                                    </ul>
-                                 </li>
-                              </ul>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </li>
-            </ul>
-         </div>
-      </div>
-      <div class="buttons"><button>Close</button></div>
-   </div>
-</div>
-
-
-
-
+RSuite.action.defineAction(
+		"Used",
+		'<fmt:message key="tool.group.other"/>',
+		{label:'<fmt:message key="tool.tip.used"/>',
+		icon:'${contextPath}/images/icon_where_used.gif',
+		action:function(moData) {
+			var div = jQuery('<div class="whereused loading"></div>');
+			div.modal({title:"<fmt:message key="tool.tip.used"/> (<fmt:message key="label.id"/>: "+moData.refId+")",width:"50%"});
+			RSuite.engine.whereUsed(moData.refId,{
+				rootElement: "refs",
+				onSuccess: function(data) {
+					var treeDiv = jQuery('<div class="tree"></div>').click(function(event) {
+						var target = jQuery(event.target);
+						if(target.is(".toggle")) {
+							var li = target.parents("li:first");
+							li.toggleClass("closed");
+						}
+					});
+					var tree = jQuery('<ul></ul>').appendTo(treeDiv);
+					var reuses = data.attr("refCount") || 0;
+					var countDiv = jQuery('<div class="instruction">'+moData.name+' is reused '+reuses+' time'+ ((reuses == 1) ? '' : 's')+'</div>');
+					//create function to recursively draw tree
+					var drawNodes = function(nodeChildren,parentLevel) {
+						jQuery.each(nodeChildren,function() {
+							var node = jQuery(this);
+							var children = node.children("node");
+							var nodeName = node.attr("label") || "unknown";
+							var browseUri = node.attr("browseUri");
+							var refId = node.attr("refId");
+							var nodeId = node.attr("id");
+							var nodeType = node.attr("type") || "mo";
+							var nodeExt = node.attr("ext");
+							var li = jQuery('<li uri="'+browseUri+'" nid="'+nodeId+'" name="'+nodeName+'" ntype="'+nodeType+'"></li>').appendTo(parentLevel);
+							var div = jQuery('<div class="node"></div>').addClass(nodeType).appendTo(li);
+							if(nodeExt) div.addClass(nodeExt);
+							div.append('<span class="toggle">&nbsp;</span>');
+							div.append('<span class="icon"><span class="icon-status"></span></span>');
+							var nodeLabel = (nodeType == "folder") ? nodeName : nodeName + " (ID: "+(refId || nodeId)+")";
+							div.append('<span class="label">'+nodeLabel+'</span>');
+							if(children.length) {
+								var ul = jQuery('<ul></ul>').appendTo(li);
+								drawNodes(children,ul);
+							} else {
+								div.find(".toggle").removeClass("toggle").addClass("leaf");
+							}
+						});
+					}
+					drawNodes(data.children("node"),tree);
+					tree.find("LI:last-child").addClass("last");
+					tree.find("UL:empty").remove();
+					countDiv.appendTo(div.removeClass("loading"));
+					//don't let it be higher than the screen, add a scrollbar if needed
+					var maxH = jQuery("body").height() - 25;
+					var origH = div.height();
+					treeDiv.appendTo(div);
+					//have to calc the div height after it is appended to the DOM
+					var treeH = treeDiv.height();
+					if(origH + treeH > maxH) {
+						treeDiv.css({
+							'height': (maxH-origH-85),
+							'overflow': 'auto'
+						});
+					}
+					RSuite.control.Modal.instance.center("both");
+				}
+			})
+		},
+		targetCheck: function(moData) {
+			if(!moData || !moData.refUri) {
+				return '<fmt:message key="tool.require.used"/>';
+			}
+		}}
+);
