@@ -1,8 +1,4 @@
-<div class="instruction">{{view.model.rtext}}</div>
-<div id="where-linked-id" {{action "onToggle"}}>
-<div class="results">
-<div class="container wordsearch" searchid= "{{view.model.searchid}}">
-<ul>
+	
 {{#each item in view.model.items}}
 <div treescope="searchResults" class="tree rsuiteDraggableParent" uri="/">
 	<li class="closed" isexpandable="true" ntype={{item.objectType}} nid={{item.nodeId}} refid={{item.nodeId}} ext="" name={{item.displayName}} checkout={{item.checkout}} qname={{item.lname}} issearchresult="true" moid={{item.nodeId}} query="">
@@ -16,7 +12,3 @@
 	</li>
 </div>		
 {{/each}}
-</ul>
-</div>
-</div>	
-</div>		
