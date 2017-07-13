@@ -1,42 +1,22 @@
-(function (global, pluginId) {
-	"use strict"; 
-	var $ = global.jQuery, 
-	RSuite = global.RSuite, 
-	Ember = global.Ember, 
-	RSuite.Action({
-		id : 'asml:whereUsed',
-		icon :  RSuite.url(pluginId, 'images/icon_where_used.gif'),
-		invoke: function ((context) {
-			var moData = Ember.get(context || {}, "managedObject");
-			moData.nodeType = Ember.get(context, "managedObject.finalManagedObject.objectType");
-			moData.refId = Ember.get(context, "managedObject.finalManagedObject.id");
-			moData.ID = Ember.get(context, "managedObject.id");
-			moData.isMO = Ember.get(context, "managedObject.finalManagedObject.objectType").startsWith('mo');
-			moData.qName = Ember.get(context, "managedObject.finalManagedObject.localName");
-			moData.refType = Ember.get(context, "managedObject.referenceManagedObject.objectType");
-			moData.name = Ember.get(context, "managedObject.finalManagedObject.displayName");
-			var webServiceInvokeOpts = RSuite.Webservice.invokeOptions(context);
-			if(moData){
-				RSuite.services({
-					version : 1,
-					service : 'whereUsed'+ moData.refId
-				}).done(function(results){
-					var node = jQuery(this);
-					var reuses = node.attr("refCount") || 0;
-					var children = node.children("node");
-					
-					var sMessage = moData.name + ' is reused ' +reuses+ 'time' + ((reuses == 1) ? '' : 's') + displayMsg;
-					var alertDiv = RSuite.view.Dialog.Message.create({message : sMessage, title : "Where Used" + moData.refId, type : "info", class : "ui-widget-overlay"});
-					alertDiv.dialogShow();	
-					
-				}).fail(function(){
-					alert("fail");
-				});
-				
-			}
-
-		},
-		isValid: function(){ return true }
-		
-	});
-}(this, "rsuite-ui-customizations"));
+<div class="instruction">{{view.model.rtext}}</div>
+<div id="where-linked-id" {{action "onToggle"}}>
+<div class="results">
+<div class="container wordsearch" searchid= "{{view.model.searchid}}">
+<ul>
+{{#each item in view.model.items}}
+<div treescope="searchResults" class="tree rsuiteDraggableParent" uri="/">
+	<li class="closed" isexpandable="true" ntype={{item.objectType}} nid={{item.nodeId}} refid={{item.nodeId}} ext="" name={{item.displayName}} checkout={{item.checkout}} qname={{item.lname}} issearchresult="true" moid={{item.nodeId}} query="">
+		<div class="node mo hit hover">
+			<div class="hitLabel1" title="">
+				<span class="toggle">&nbsp;</span><span class="icon"><span class="icon-status">
+				</span></span>
+				<span class="label"><span class="nodeName">{{item.displayName}} {{item.nodeId}}</span></span>
+			</div>
+		</div>
+	</li>
+</div>		
+{{/each}}
+</ul>
+</div>
+</div>	
+</div>		
